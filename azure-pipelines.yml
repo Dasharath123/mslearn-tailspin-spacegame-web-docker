@@ -7,10 +7,10 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: 'Build'
-   displayName: 'Build and push'
+- - stage: 'Build'
+    displayName: 'Build and push'
   jobs:  
-    -job:'Build'
+  - job: 'Build'
     displayName: 'Build job'
     pool:
       vmImage: 'ubuntu-16.04'
@@ -24,8 +24,7 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
         containerRegistry: 'Container Registry Connection'
         tags: |
-          $(tag
-      
+          $(tag)      
 
     variables:
       wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
@@ -77,8 +76,8 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
-- stage: 'Deploy'
-   displayName: 'Deploy the container'
+- - stage: 'Deploy'
+  displayName: 'Deploy the container'
   dependsOn: Build
   jobs:
   - job: 'Deploy'
@@ -92,10 +91,4 @@ stages:
       inputs:
        appName: $(WebAppName)
        azureSubscription: 'Resource Manager - Tailspin - Space Game'
-       imageName: $(RegistryName)/$(webRepository):$(build.buildId)          - task: AzureWebApp@1
-            displayName: 'Azure App Service Deploy: website'
-            inputs:
-              azureSubscription: 'Resource Manager - Tailspin - Space Game'
-              appName: '$(WebAppName)'
-              appType: webAppLinux
-              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
+       imageName: $(RegistryName)/$(webRepository):$(build.buildId)
