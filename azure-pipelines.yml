@@ -73,10 +73,10 @@ stages:
         arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
         zipAfterPublish: true
 
-    - publish: '$(Build.ArtifactStagingDirectory)'
+- publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
-- - stage: 'Deploy'
+     - - stage: 'Deploy'
   displayName: 'Deploy the container'
   dependsOn: Build
   jobs:
